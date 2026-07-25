@@ -54,4 +54,3 @@
 ## 참고
 
 - 초기 직원 명단 예시: `모의_직원명단.xlsx`
-- 상세 요구사항: `random cleaning duty.txt`
