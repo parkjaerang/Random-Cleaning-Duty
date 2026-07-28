@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Cleaning Duty</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/bg-animation.css" />
+</head>
+<body data-page="index">
+  <div class="app-shell split-layout">
+    <!-- LEFT: info + controls + schedule -->
+    <section class="panel-left">
+      <header class="app-header">
+        <div class="brand">
+          <img src="img/logo.svg" alt="JM Penguin" class="brand-logo" />
+          <span class="brand-name">JM PENGUIN COMPANY</span>
+        </div>
+        <div class="top-actions">
+          <div class="lang-toggle">
+            <button type="button" data-lang="zh" class="lang-btn">中</button>
+            <button type="button" data-lang="ko" class="lang-btn active">한</button>
+          </div>
+          <a href="admin.html" class="btn btn-ghost btn-sm" data-i18n="nav.admin">관리자</a>
+        </div>
+      </header>
+
+      <div class="user-bar">
+        <label class="user-picker-wrap">
+          <span class="muted" data-i18n="nav.whoami">본인</span>
+          <select id="user-picker" class="user-picker" aria-label="Select user"></select>
+        </label>
+        <span id="user-greeting" class="user-greeting"></span>
+        <button type="button" id="nav-swaps" class="btn btn-ghost btn-sm badge-wrap">
+          <span data-i18n="nav.swaps">교환 요청</span>
+          <span id="swap-badge" class="badge" hidden>0</span>
+        </button>
+      </div>
+
+      <h1 class="page-title">Random Cleaning Duty</h1>
+      <p class="page-sub" data-i18n="home.sub">
+        하루에 2명, 일요일·공휴일 제외. 담당 횟수와 주방·화장실 담당 순서를 균등하게 자동 배정합니다.
+      </p>
+
+      <div class="rule-cards">
+        <article class="rule-card">
+          <h3 data-i18n="rule.day.title">하루 / 2명</h3>
+          <p data-i18n="rule.day.desc">주방담당·화장실 담당 각각 1명, 분리수거는 함께</p>
+        </article>
+        <article class="rule-card">
+          <h3 data-i18n="rule.even.title">균등 배정</h3>
+          <p data-i18n="rule.even.desc">격월로 횟수를 번갈아 맞춰 전원 균등 배정</p>
+        </article>
+        <article class="rule-card">
+          <h3 data-i18n="rule.seq.title">순서 교대</h3>
+          <p data-i18n="rule.seq.desc">사람마다 주방담당/화장실 담당 순서를 번갈아 담당</p>
+        </article>
+      </div>
+
+      <div class="roles-box">
+        <h3 data-i18n="roles.title">당번 역할</h3>
+        <ul>
+          <li data-i18n="roles.front">왼쪽 주방 담당 — 음식물 쓰레기통 청소, 정수기 주변 닦기</li>
+          <li data-i18n="roles.back">오른쪽 화장실 담당 — 변기 시트 클리너·휴지 확인·보충, 제빙기 점검 및 청소</li>
+          <li data-i18n="roles.note">당일 청소가 어렵다면 미리 다른 분과 상의하여 날짜를 변경해 주세요.</li>
+        </ul>
+      </div>
+
+      <div class="view-toolbar">
+        <div class="month-nav">
+          <button type="button" id="prev-month" class="icon-btn">‹</button>
+          <span id="current-month" class="month-label"></span>
+          <button type="button" id="next-month" class="icon-btn">›</button>
+        </div>
+        <div class="view-toggle">
+          <button type="button" data-view="week" class="toggle-btn active" data-i18n="view.week">주간</button>
+          <button type="button" data-view="mine" class="toggle-btn" data-i18n="view.mine">내 일정</button>
+        </div>
+      </div>
+
+      <!-- Left slot zone: prompt + single slot (pull + reveal in one) -->
+      <div class="left-slot-zone">
+        <p class="slot-pull-prompt" id="slot-pull-prompt" data-i18n="empty.pullSlot">
+          레버를 당겨 이번 주 당첨자를 확인하세요.
+        </p>
+        <div id="animation-overlay" class="slot-chrome"></div>
+        <div class="mini-slot duty-slot" id="mini-slot" role="group" aria-label="Duty slot machine">
+          <div class="mini-slot-body">
+            <div class="mini-window" id="slot-reel-front" aria-label="Front duty"></div>
+            <div class="mini-window" id="slot-reel-back" aria-label="Back duty"></div>
+          </div>
+          <div class="mini-lever" title="Pull">
+            <div class="mini-lever-stick"></div>
+            <div class="mini-lever-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule below slot zone -->
+      <div class="schedule-under-slot" id="result-panel">
+        <div class="empty-state" id="empty-state" hidden>
+          <p data-i18n="empty.pullSlot">레버를 당겨 이번 주 당첨자를 확인하세요.</p>
+        </div>
+        <div id="schedule-view" hidden></div>
+      </div>
+    </section>
+
+    <!-- RIGHT: decorative cleaning-supplies animation only -->
+    <aside class="panel-right panel-decorative" id="animation-panel" aria-label="Decorative background">
+      <div id="bg-anim-root" data-image-dir="img/cleaning supplies/"></div>
+    </aside>
+  </div>
+
+  <!-- Swap modal -->
+  <div id="swap-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close="swap-modal"></div>
+    <div class="modal-panel">
+      <header class="modal-header">
+        <h2 data-i18n="swap.title">교환 요청</h2>
+        <button type="button" class="icon-btn" data-close="swap-modal">✕</button>
+      </header>
+      <div class="modal-body">
+        <div id="swap-step-select">
+          <p class="muted" data-i18n="swap.selectMine">내 일정을 선택하세요.</p>
+          <div id="swap-my-days" class="swap-list"></div>
+        </div>
+        <div id="swap-step-target" hidden>
+          <p class="muted" data-i18n="swap.selectTarget">교환할 상대 일정을 선택하세요.</p>
+          <div id="swap-targets" class="swap-list"></div>
+        </div>
+        <div id="swap-history">
+          <h3 data-i18n="swap.history">요청 내역</h3>
+          <div id="swap-history-list" class="swap-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.x/dist/pixi.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/login.js"></script>
+  <script src="js/employee.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/swap.js"></script>
+  <script src="js/excel.js"></script>
+  <script src="js/animation.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/bg-animation.js"></script>
+</body>
+</html>

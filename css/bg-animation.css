@@ -1,0 +1,74 @@
+/**
+ * Right panel — falling cleaning supplies background
+ */
+
+.panel-decorative {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  padding: 0 !important;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #d9e4f5 100%);
+  cursor: url('../img/gloves.png') 16 0, pointer;
+}
+
+body.cursor-gloves,
+body.cursor-gloves * {
+  cursor: url('../img/gloves.png') 16 0, pointer !important;
+}
+
+/* PNG 커서가 브라우저에서 무시될 때 쓰는 시각적 대체 커서 */
+body.glove-fallback-on,
+body.glove-fallback-on * {
+  cursor: none !important;
+}
+
+#glove-fallback-cursor {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  left: 0;
+  top: 0;
+  background: url('../img/gloves.png') no-repeat center / contain;
+  pointer-events: none;
+  z-index: 2147483647;
+  transform: translate(-16px, 0);
+  opacity: 0;
+}
+
+#glove-fallback-cursor.visible {
+  opacity: 1;
+}
+
+.panel-decorative * {
+  cursor: inherit;
+}
+
+#bg-anim-root {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-anim-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  user-select: none;
+}
+
+.bg-anim-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}

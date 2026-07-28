@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Random Cleaning Duty</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body data-page="admin">
+  <div class="admin-shell">
+    <header class="app-header admin-header">
+      <div class="brand">
+        <img src="img/logo.svg" alt="JM Penguin" class="brand-logo" />
+        <span class="brand-name">JM PENGUIN COMPANY</span>
+      </div>
+      <nav class="admin-tabs" id="admin-tabs">
+        <button type="button" class="tab-btn active" data-tab="employees" data-i18n="admin.tab.employees">직원 관리</button>
+        <button type="button" class="tab-btn" data-tab="schedule" data-i18n="admin.tab.schedule">일정 관리</button>
+        <button type="button" class="tab-btn badge-wrap" data-tab="swaps" data-i18n="admin.tab.swaps">
+          교환 관리
+          <span id="admin-swap-badge" class="badge" hidden>0</span>
+        </button>
+      </nav>
+      <div class="top-actions">
+        <div class="lang-toggle">
+          <button type="button" data-lang="zh" class="lang-btn">中</button>
+          <button type="button" data-lang="ko" class="lang-btn active">한</button>
+        </div>
+        <a href="index.html" class="btn btn-ghost btn-sm" data-i18n="nav.userHome">일정 보기</a>
+      </div>
+    </header>
+
+    <!-- Employees tab -->
+    <section id="tab-employees" class="admin-section">
+      <h1 class="page-title" data-i18n="admin.emp.title">직원명단 관리</h1>
+
+      <div class="info-cards">
+        <article class="info-card">
+          <h3 data-i18n="admin.emp.manage">직원 관리</h3>
+          <p data-i18n="admin.emp.manageDesc">입사자 추가, 퇴사자 삭제</p>
+        </article>
+        <article class="info-card">
+          <h3 data-i18n="admin.emp.excel">직원 명단 엑셀 불러오기</h3>
+          <p data-i18n="admin.emp.excelDesc">많은 인원의 직원 명단을 엑셀에서 가져오기</p>
+        </article>
+      </div>
+
+      <div class="admin-toolbar">
+        <form id="add-employee-form" class="add-form">
+          <span class="add-label" data-i18n="admin.emp.add">직원 추가</span>
+          <input id="emp-dept" type="text" placeholder="팀/파트" data-i18n-placeholder="admin.emp.deptPh" />
+          <input id="emp-name" type="text" placeholder="이름" required data-i18n-placeholder="admin.emp.namePh" />
+          <button type="submit" class="btn btn-primary btn-sm" data-i18n="admin.emp.addBtn">추가</button>
+        </form>
+
+        <input id="emp-search" type="search" class="search-input" placeholder="이름·부서 검색" data-i18n-placeholder="admin.emp.searchPh" />
+
+        <select id="emp-dept-filter" class="filter-select">
+          <option value="" data-i18n="admin.emp.allDept">부서/팀별</option>
+        </select>
+
+        <button type="button" id="btn-import-excel" class="btn btn-secondary" data-i18n="admin.emp.import">직원 명단 가져오기</button>
+        <button type="button" id="btn-clear-employees" class="btn btn-danger" data-i18n="admin.emp.clearAll">전체 명단 삭제</button>
+        <input type="file" id="excel-file-input" accept=".xlsx,.xls" hidden />
+      </div>
+
+      <div id="excel-dropzone" class="excel-dropzone">
+        <p data-i18n="admin.emp.drop">엑셀 파일을 여기에 드래그하거나 클릭하여 업로드</p>
+        <p class="muted" data-i18n="admin.emp.dropHint">형식: 이름, 부서</p>
+      </div>
+
+      <div id="employee-grid" class="employee-grid"></div>
+    </section>
+
+    <!-- Schedule tab -->
+    <section id="tab-schedule" class="admin-section" hidden>
+      <h1 class="page-title" data-i18n="admin.sch.title">일정 관리</h1>
+      <p class="page-sub" data-i18n="admin.sch.sub">이번 달 일정을 생성하고 당번표를 수정할 수 있습니다.</p>
+
+      <div class="view-toolbar">
+        <div class="month-nav">
+          <button type="button" id="admin-prev-month" class="icon-btn">‹</button>
+          <span id="admin-current-month" class="month-label"></span>
+          <button type="button" id="admin-next-month" class="icon-btn">›</button>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" id="btn-generate" class="btn btn-primary" data-i18n="admin.sch.generate">이번 달 일정 생성</button>
+        <button type="button" id="btn-download" class="btn btn-secondary" data-i18n="admin.sch.download">한글파일 다운로드</button>
+      </div>
+
+      <div class="roles-box compact">
+        <h3 data-i18n="roles.title">당번 역할</h3>
+        <ul>
+          <li data-i18n="roles.front">왼쪽 주방 담당 — 음식물 쓰레기통 청소, 정수기 주변 닦기</li>
+          <li data-i18n="roles.back">오른쪽 화장실 담당 — 변기 시트 클리너·휴지 확인·보충, 제빙기 점검 및 청소</li>
+        </ul>
+      </div>
+
+      <div class="schedule-under-slot">
+        <div class="empty-state" id="admin-empty-state">
+          <p data-i18n="empty.adminSchedule">일정을 생성하면 명단이 표시됩니다.</p>
+        </div>
+        <div id="admin-schedule-view" hidden></div>
+      </div>
+    </section>
+
+    <!-- Swaps tab -->
+    <section id="tab-swaps" class="admin-section" hidden>
+      <h1 class="page-title" data-i18n="admin.swap.title">교환 요청 관리</h1>
+      <div id="admin-swap-list" class="swap-admin-list"></div>
+    </section>
+  </div>
+
+  <!-- Edit employee modal -->
+  <div id="edit-emp-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close="edit-emp-modal"></div>
+    <div class="modal-panel modal-sm">
+      <header class="modal-header">
+        <h2 data-i18n="admin.emp.edit">직원 수정</h2>
+        <button type="button" class="icon-btn" data-close="edit-emp-modal">✕</button>
+      </header>
+      <form id="edit-employee-form" class="modal-body">
+        <input type="hidden" id="edit-emp-id" />
+        <label class="field">
+          <span data-i18n="admin.emp.namePh">이름</span>
+          <input id="edit-emp-name" type="text" required />
+        </label>
+        <label class="field">
+          <span data-i18n="admin.emp.deptPh">팀/파트</span>
+          <input id="edit-emp-dept" type="text" required />
+        </label>
+        <div class="modal-actions">
+          <button type="button" id="btn-delete-emp" class="btn btn-danger" data-i18n="admin.emp.delete">삭제</button>
+          <button type="submit" class="btn btn-primary" data-i18n="admin.emp.save">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/login.js"></script>
+  <script src="js/employee.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/swap.js"></script>
+  <script src="js/excel.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

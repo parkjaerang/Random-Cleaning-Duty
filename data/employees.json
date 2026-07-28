@@ -1,0 +1,22 @@
+[
+  { "id": "emp-001", "name": "김민수", "department": "경영지원" },
+  { "id": "emp-002", "name": "이서연", "department": "경영지원" },
+  { "id": "emp-003", "name": "박준혁", "department": "영업1팀" },
+  { "id": "emp-004", "name": "최유진", "department": "영업1팀" },
+  { "id": "emp-005", "name": "정하늘", "department": "영업2팀" },
+  { "id": "emp-006", "name": "한지우", "department": "영업2팀" },
+  { "id": "emp-007", "name": "오세훈", "department": "개발팀" },
+  { "id": "emp-008", "name": "윤서아", "department": "개발팀" },
+  { "id": "emp-009", "name": "장도윤", "department": "개발팀" },
+  { "id": "emp-010", "name": "강예린", "department": "디자인팀" },
+  { "id": "emp-011", "name": "조현우", "department": "디자인팀" },
+  { "id": "emp-012", "name": "배수진", "department": "마케팅" },
+  { "id": "emp-013", "name": "신동혁", "department": "마케팅" },
+  { "id": "emp-014", "name": "임나영", "department": "인사팀" },
+  { "id": "emp-015", "name": "황민재", "department": "인사팀" },
+  { "id": "emp-016", "name": "송지호", "department": "재무팀" },
+  { "id": "emp-017", "name": "권소희", "department": "재무팀" },
+  { "id": "emp-018", "name": "노태영", "department": "물류팀" },
+  { "id": "emp-019", "name": "문채원", "department": "물류팀" },
+  { "id": "emp-020", "name": "류건우", "department": "고객지원" }
+]
